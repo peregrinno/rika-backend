@@ -1,0 +1,10 @@
+source 'https://rubygems.org'
+
+gem 'sinatra'
+gem 'sinatra-contrib'
+gem 'jwt'
+gem 'bcrypt'
+gem 'json'
+gem 'pg'
+gem 'sinatra-activerecord'
+gem 'dotenv' 
