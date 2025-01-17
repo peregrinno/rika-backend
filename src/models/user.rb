@@ -21,4 +21,11 @@ class User < Sequel::Model
   def to_json(options = {})
     values.reject { |k,v| k == :password_hash }.to_json
   end
+
+  # Valores default para os novos campos
+  def before_create
+    super
+    self.first_access ||= true
+    self.verified ||= false
+  end
 end 

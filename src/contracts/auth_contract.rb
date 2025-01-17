@@ -20,4 +20,10 @@ module Contracts
       required(:password).filled(:string)
     end
   end
+
+  class EmailOnlyContract < Dry::Validation::Contract
+    params do
+      required(:email).filled(:string).value(format?: URI::MailTo::EMAIL_REGEXP)
+    end
+  end
 end 

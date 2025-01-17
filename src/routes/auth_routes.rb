@@ -1,21 +1,12 @@
 require 'sinatra/json'
-require_relative '../lib/cors_headers'
 
 class AuthRoutes < Sinatra::Base
   helpers Sinatra::JSON
 
-  configure do
-    enable :cross_origin
-  end
-
   before do
     content_type :json
-    headers CorsHeaders.set_cors_headers(ENV)
+    response.headers['Access-Control-Allow-Origin'] = '*'
     @request_payload = JSON.parse(request.body.read) rescue {}
-  end
-
-  options "*" do
-    200
   end
 
   post '/login' do
@@ -28,5 +19,22 @@ class AuthRoutes < Sinatra::Base
     controller = AuthController.new
     controller.instance_variable_set(:@request_payload, @request_payload)
     controller.register
+  end
+
+  get '/validate' do
+    controller = AuthController.new
+    controller.validate(params[:token])
+  end
+
+  post '/validate-attempt' do
+    controller = AuthController.new
+    controller.instance_variable_set(:@request_payload, @request_payload)
+    controller.validate_attempt
+  end
+
+  get '/me' do
+    controller = AuthController.new
+    controller.set_request_env(env)
+    controller.me
   end
 end 
