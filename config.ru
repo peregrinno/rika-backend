@@ -1,23 +1,22 @@
 require './app'
 require 'sinatra'
-require 'rack/cors'
+require 'stringio'
 
-use Rack::Cors do
-  allow do
-    if ENV['RACK_ENV'] == 'development'
-      # Em desenvolvimento, permite localhost:3000 especificamente
-      origins 'http://localhost:3000'
-    else
-      # Em produção, usa a URL configurada
-      origins ENV['CORS_URL']
+# Middleware para preservar o body da requisição
+class PreserveRequestBody
+  def initialize(app)
+    @app = app
+  end
+
+  def call(env)
+    if env['CONTENT_TYPE'] == 'application/json'
+      body = env['rack.input'].read
+      env['raw_body'] = body
+      env['rack.input'] = StringIO.new(body)
     end
-
-    resource '*',
-      methods: [:get, :post, :put, :patch, :delete, :options, :head],
-      headers: :any,
-      credentials: true,
-      max_age: 600
+    @app.call(env)
   end
 end
 
+use PreserveRequestBody
 map('/') { run Router } 
