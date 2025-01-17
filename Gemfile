@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'sinatra'
 gem 'sinatra-contrib'
+gem 'sinatra-cross_origin'
 gem 'jwt'
 gem 'bcrypt'
 gem 'json'
@@ -15,6 +16,7 @@ gem 'dry-validation'
 gem 'dry-types'
 gem 'activesupport', '~> 7.1.0'
 gem 'rack-cors'
+gem 'mail'
 
 group :development do
   gem 'rerun'
